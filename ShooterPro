@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AccurateShooter : MonoBehaviour {
+
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+    // Update is called once per frame
+    void Update()
+    {
+   
+    }
+    public float ShooterPro (float Speed, float TurnSpeed, int L, GameObject Enemy)
+    {
+        Vector3 RadiusVector = (gameObject.transform.position - Enemy.transform.position);
+        Vector3 Polet = RadiusVector.normalized*Speed + Quaternion.Euler(0,0,90*L)* RadiusVector.normalized*Mathf.Sqrt(100 - Speed*Speed);
+        float Angle01 = Mathf.Acos(RadiusVector.normalized.x)*180/Mathf.PI;
+        if (RadiusVector.y < 0)
+        {
+                Angle01 = 360 - Angle01;
+        }
+        float Angle02 = Mathf.Acos(Polet.normalized.x) * 180 / Mathf.PI;
+        if (Polet.y < 0)
+        {
+                Angle02 = 360 - Angle02;
+        }
+        float Angle1 = Angle01 - Angle02;
+        float Angle2 = Mathf.Sin(Angle1) * 10 / TurnSpeed;
+        //     float Angle2 = Mathf.Asin(Mathf.Sin(Angle1)*Mathf.Abs(Speed)/TurnSpeed);
+        return Angle2;
+    }
+}
