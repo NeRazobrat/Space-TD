@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class AccurateShooter : MonoBehaviour {
+
+    // Use this for initialization
+    void Start()
+    {
+
+    }
+    // Update is called once per frame
+    void Update()
+    {
+   
+    }
+    public float ShooterPro(float Speed, float RadialSpeed, float BoltSpeed, int moveDirection, GameObject Enemy)
+    {
+        Vector3 RadiusVector = (gameObject.transform.position - Enemy.transform.position);
+        Vector3 Flight = RadiusVector.normalized * RadialSpeed + Quaternion.Euler(0, 0, 90 * moveDirection) * RadiusVector.normalized * Speed;//"Flight" is a vector of total velosity
+        float RadiusVectorAngle = Mathf.Acos(RadiusVector.normalized.x) * 180 / Mathf.PI;
+        if (RadiusVector.y < 0)
+        {
+            RadiusVectorAngle = 360 - RadiusVectorAngle;
+        }
+        float FlightAngle = Mathf.Acos(Flight.normalized.x) * 180 / Mathf.PI;
+        if (Flight.y < 0)
+        {
+            FlightAngle = 360 - FlightAngle;
+        }
+        float AngleBetweenFlightAndRadiusVector = RadiusVectorAngle - FlightAngle;
+        float AngleOfRotation = Mathf.Sin(AngleBetweenFlightAndRadiusVector) * Mathf.Sqrt(Speed * Speed + RadialSpeed * RadialSpeed) / BoltSpeed;
+        return AngleOfRotation;//"AngleOfRotation" is angle that we should add to rotation of turrent (in degrees) 
+        //Если что-нибудь непонятно (например комменты, в которых я проявляю свои глубокие познания английского) пиши))
+    }
+}
