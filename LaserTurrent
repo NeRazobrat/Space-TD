@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class LaserTurrent : TurretController
+{
+
+    GameObject laserProjectileGO;
+    public Transform EndOfBarrel;
+
+    protected override void DoShooting()
+    {
+        LaserShooter(projectileGO, EndOfBarrel);
+    }
+
+    protected override void CheckShooting(float angle)
+    {
+       // if (laserProjectileGO != null)
+    //    {
+            Destroy(laserProjectileGO);
+      //  }
+        bDoShooting = (Mathf.Abs(transform.eulerAngles.z - angle) < 0.3f);
+    }
+
+
+    public void LaserShooter(GameObject Laser, Transform EndOfBarrel)
+    {
+
+        RaycastHit2D hitinfo = Physics2D.Raycast((Vector2)EndOfBarrel.transform.position, EndOfBarrel.transform.position - transform.position);
+        Vector2 LaserCoordinate = new Vector2((hitinfo.point.x + EndOfBarrel.transform.position.x) / 2, (hitinfo.point.y + EndOfBarrel.transform.position.y) / 2);
+        Vector2 LaserDirection = new Vector2(hitinfo.point.x - EndOfBarrel.transform.position.x, hitinfo.point.y - EndOfBarrel.transform.position.y);
+        float LaserLength = LaserDirection.magnitude;
+        float pixelsPerUnit = Laser.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite.pixelsPerUnit;
+        float UnitLength = Laser.transform.GetChild(0).gameObject.GetComponent<SpriteRenderer>().sprite.textureRect.height / pixelsPerUnit;
+        laserProjectileGO = Instantiate(Laser, LaserCoordinate, transform.rotation);
+        laserProjectileGO.transform.localScale = new Vector3(Laser.transform.localScale.x, Laser.transform.localScale.y * 2.5f * (LaserLength / UnitLength), Laser.transform.localScale.z);
+
+    }
+}
